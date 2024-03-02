@@ -31,14 +31,17 @@ def select_image():
 # Sub function to do the actual file splitting
 def split_image(image_path, chunk_size):
     image = Image.open(image_path)
-    width, height = image.size
+    width, height= image.size
+    chunk_w = min(width, chunk_size)
+    chunk_h = min(height, chunk_size)
+
     chunks = []
     # Current implementation will make ALL chunks have the defined size. 
     # So even if the final chunk doesn't fill out the remaining portion of the image, 
     # it will still be the defined chunk size with transparency leftover
-    for y in range(0, height, chunk_size):
-        for x in range(0, width, chunk_size):
-            box = (x, y, x + chunk_size, y + chunk_size)
+    for y in range(0, height, chunk_h):
+        for x in range(0, width, chunk_w):
+            box = (x, y, x + chunk_w, y + chunk_h)
             chunk = image.crop(box)
             chunks.append(chunk)
     return chunks
